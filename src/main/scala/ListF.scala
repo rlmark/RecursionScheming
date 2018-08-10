@@ -1,6 +1,6 @@
 /* Where ListF is a higher kinded type
 which contains A (the elements in the list)
-and L, a type parameter representing the list
+and L is a type parameter representing the list
 */
 sealed trait ListF[+A, +L]
 case class NilF() extends ListF[Nothing, Nothing]
@@ -17,4 +17,3 @@ object ListF {
     case Cons(head, tail) => ConsF(head, tail)
   }
 }
-
