@@ -2,13 +2,13 @@
 which contains A (the elements in the list)
 and L is a type parameter representing the list
 */
-sealed trait ListF[+A, +L]
-case class NilF() extends ListF[Nothing, Nothing]
+sealed trait ListF[+A, L]
+case class NilF[L]() extends ListF[Nothing, L]
 case class ConsF[A, L](head: A, tail: L) extends ListF[A,L]
 
 object ListF {
   def in[A]: ListF[A, List[A]] => List[A] = {
-    case _:NilF => Nil
+    case _:NilF[List[A]] => Nil
     case ConsF(head, tail) => Cons[A](head, tail)
   }
 
@@ -17,3 +17,5 @@ object ListF {
     case Cons(head, tail) => ConsF(head, tail)
   }
 }
+
+

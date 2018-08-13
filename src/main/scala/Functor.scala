@@ -6,12 +6,12 @@ trait Functor[F[_]] {
 }
 
 object FunctorInstances {
-  implicit val listFFunctor = {
-    new Functor[ListF] {
-      override def map[A, B](f: A => B): ListF[B, List[B]] = {
-        case NilF => NilF
-        case ConsF(head, tail) => ConsF(head, f(tail)) // Think about this. Why do we call f on the tail.
-      }
-    }
-  }
+//  implicit val listFFunctor = {
+//    new Functor[ListF] {
+//      override def map[A, B](f: A => B): ListF[B, List[B]] = {
+//        case NilF => NilF
+//        case ConsF(head, tail) => ConsF(head, f(tail)) // Think about this. Why do we call f on the tail.
+//      }
+//    }
+//  }
 }
