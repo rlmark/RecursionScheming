@@ -1,8 +1,10 @@
-trait InvariantList {
-  def invariantMap(f: Int => Int): InvariantList = {
+package int_list
+
+trait IntList {
+  def intMap(f: Int => Int): IntList = {
     this match {
       case INil => INil
-      case ICons(head, tail) => ICons(f(head), tail.invariantMap(f))
+      case ICons(head, tail) => ICons(f(head), tail.intMap(f))
     }
   }
   // Folds are Catamorphisms
@@ -12,7 +14,6 @@ trait InvariantList {
       case ICons(h, t) => t.iFoldLeft(f(z, h))(f)
     }
   }
-
   def iFoldRight[A](z: A)(f: (Int, A) => A): A = {
     this match {
       case INil => z
@@ -20,17 +21,17 @@ trait InvariantList {
     }
   }
 }
-case object INil extends InvariantList
-case class ICons(head: Int, tail: InvariantList) extends InvariantList
+case object INil extends IntList
+case class ICons(head: Int, tail: IntList) extends IntList
 
-object InvariantListTest extends App {
-  def multiply(l: InvariantList): Int = {
+object IntListTest extends App {
+  def multiply(l: IntList): Int = {
     l match {
       case INil => 1
       case ICons(h, t) => h * multiply(t)
     }
   }
-  def length(l: InvariantList): Int = {
+  def length(l: IntList): Int = {
     l match {
       case INil => 0
       case ICons(_, t) => 1 + length(t)

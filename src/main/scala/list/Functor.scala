@@ -1,3 +1,7 @@
+package list
+
+import int_list.IntListF
+
 /* I have to implement a functor type class because... reasons
 I think it's because I need ListF to be a functor to get the F Algebra
 * */
@@ -14,6 +18,11 @@ object FunctorInstances {
 //      }
 //    }
 //  }
+  implicit val intListFunctor = {
+    new Functor[IntListF] {
+      override def map[A, B](f: A => B): IntListF[B] = ???
+    }
+  }
 }
 
 object Functor {
