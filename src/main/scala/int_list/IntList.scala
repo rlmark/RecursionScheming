@@ -46,3 +46,8 @@ object IntListTest extends App {
   println(testListI.iFoldRight(1)((acc, next) => next * acc))
   println(testListI.iFoldRight(0)((_, acc) => acc + 1))
 }
+
+/*Our catamorphism goal is to write a function from a Recursive Data type R to a value A
+* R => A
+*
+* */
