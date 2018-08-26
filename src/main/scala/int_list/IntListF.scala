@@ -5,7 +5,6 @@ case class IntNilF[A]() extends IntListF[A]
 case class IntConsF[A](h: Int, intTailF: A) extends IntListF[A]
 
 object IntListF {
-
   // IntList and IntListF are ISOMORPHISMS
   def in: IntListF[IntList] => IntList = {
     case _:IntNilF[IntList] => INil
@@ -28,7 +27,5 @@ object IntListF {
   // NOOooOOooo type sadness
   val testIntListF: IntListF[IntConsF[IntConsF[IntNilF[Nothing]]]] = IntConsF(1, IntConsF(2, IntConsF(3, IntNilF())))
   // which is why we need fixed points
-//  type Fix[F[_]] = F[Fix[_]]
-
+  // type Fix[F[_]] = F[Fix[_]] but... this won't compile
 }
-
