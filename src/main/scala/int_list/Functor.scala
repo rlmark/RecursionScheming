@@ -27,5 +27,5 @@ object FunctorInstanceRun extends App {
   import Functor._
   import FunctorInstances._
   val testListF = IntConsF(1, IntConsF(2, IntNilF))
-  mapF((i: Int) => i + 1)(intListFunctor)// Todo: call this
+  mapF((i: Int) => i + 1)(intListFunctor)//(testListF)
 }
