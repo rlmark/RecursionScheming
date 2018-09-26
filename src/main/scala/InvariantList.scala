@@ -36,6 +36,3 @@ object InvariantListTest extends App {
   println(testListI.iFoldLeft(1)((acc, next) => next * acc))
   println(testListI.iFoldLeft(0)((acc, _) => acc + 1))
 }
-
-
-
