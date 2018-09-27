@@ -8,10 +8,10 @@ trait Functor[F[_]] {
 }
 
 object FunctorInstances {
-  implicit val intListFunctor: Functor[IntListF] = { new Functor[IntListF] {
-      override def map[A, B](f: A => B): IntListF[A] => IntListF[B] = {
-          case _:IntNilF[A] => IntNilF[B]()
-          case IntConsF(i, tailF) => IntConsF(i, f(tailF))
+  implicit val intListFunctor: Functor[IntListF] = { new Functor[Fix[IntListF]] {
+      override def map[A, B](f: A => B): Fix[IntListF] => Fix[IntListF] = {
+          case Fix(_:IntNilF[A]) => Fix[IntListF](IntNilF())
+          case Fix(IntConsF(i, tailF)) => Fix[IntListF](IntConsF(i, Fix(f(tailF))))
       }
     }
   }
@@ -26,6 +26,6 @@ object Functor {
 object FunctorInstanceRun extends App {
   import Functor._
   import FunctorInstances._
-  val testListF = IntConsF(1, IntConsF(2, IntNilF))
-  mapF((i: Int) => i + 1)(intListFunctor)//(testListF)
+  val testListF: Fix[IntListF] = Fix[IntListF](IntConsF(1, Fix(IntConsF(2, Fix(IntNilF())))))
+  mapF((i: Int) => i + 1)(intListFunctor)(testListF.f)
 }

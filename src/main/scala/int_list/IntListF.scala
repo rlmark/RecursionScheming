@@ -1,10 +1,15 @@
 package int_list
 
+import scala.language.higherKinds
+
 sealed trait IntListF[A]
 case class IntNilF[A]() extends IntListF[A]
 case class IntConsF[A](h: Int, intTailF: A) extends IntListF[A]
 
+case class Fix[F[_]](f: F[Fix[F]])
+
 object IntListF {
+
   // IntList and IntListF are ISOMORPHISMS
   def in: IntListF[IntList] => IntList = {
     case _:IntNilF[IntList] => INil
