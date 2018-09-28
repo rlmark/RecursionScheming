@@ -12,9 +12,7 @@ object Cata {
     alg(mapCata(fr))
   }
 
-  /*def cata[F[_]: Functor, A](structure: Fix[F])(algebra: F[A] => A): A =
-  algebra(structure.unfix.map(cata(_)(algebra)))*/
-
+  // if you thinka bout it, your F algebra is kind of like your
   def cata2[A, F[_]](out: Fix[F] => F[Fix[F]], alg: F[A] => A)(r: Fix[F])(implicit functor: Functor[F]): A = {
     val mapCata: F[Fix[F]] => F[A] = functor.map(cata2(out, alg))
     alg(mapCata(r.unfix))
@@ -34,14 +32,15 @@ object RunCata extends App {
     case x :: xs => Fix[IntListF](IntConsF(x, fromList(xs)))
   }
 
-//  def multiply = cata(IntListF.out, multiplyFAlgebra())
+  def multiply1 = cata(IntListF.out, multiplyFAlgebra())_
 
-  val intListOut: IntList => IntListF[IntList] = IntListF.out
-  val intListin: IntListF[IntList] => IntList = IntListF.in
-
-  def multiply: Fix[IntListF] => Int = cata2(Fix.out, multiplyFAlgebra())
+  def multiply2: Fix[IntListF] => Int = cata2(Fix.out, multiplyFAlgebra())
+  def addOneToEach = cata2(Fix.out, addOneToEachAlgebra())
   //multiply(testListF)
-  println(multiply(testListFFix))
-  println(multiply(fromList(1 :: 2 :: 3 :: 4 :: 5 :: Nil)))
+  println(multiply2(testListFFix))
+  println(multiply2(fromList(1 :: 2 :: 3 :: 4 :: 5 :: Nil)))
 
+  // Is a Catamorphism as expressive as a fold??? Can I use it to make a new list as a kind of weird map?
+  println((1 to 10).toList.foldLeft(List[Int]())((acc, next) => next + 1 :: acc ))
+  println(addOneToEach(testListFFix))
 }

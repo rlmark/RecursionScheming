@@ -30,5 +30,5 @@ object IntListF {
   // NOOooOOooo type sadness
   val testIntListF: IntListF[IntConsF[IntConsF[IntNilF[Nothing]]]] = IntConsF(1, IntConsF(2, IntConsF(3, IntNilF())))
   // which is why we need fixed points
-  // type Fix[F[_]] = F[Fix[_]] but... this won't compile
+  // type Fix[F[_]] = F[Fix[_]] but... this won't compile as a type alias.
 }

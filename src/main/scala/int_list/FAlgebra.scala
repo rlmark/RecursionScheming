@@ -12,7 +12,7 @@ object FAlgebra {
 
   // Is this also an f algebra?
   type PhantomIntList[A] = IntList // Creative, but maybe this shouldn't work...
-  def out: FAlgebra[PhantomIntList, IntListF[_]] = { // ASK GREG about what the generated type would actually be
+  def out: FAlgebra[PhantomIntList, IntListF[_]] = {
     case INil => IntNilF()
     case ICons(h, t) => IntConsF(h, t)
   }
@@ -20,6 +20,16 @@ object FAlgebra {
   def multiplyFAlgebra(): FAlgebra[IntListF, Int] = {
     case IntNilF() => 1
     case IntConsF(h: Int, t: Int) => h * t // Weird that H and T are both Ints, how does that work w/out recursion...
+  }
+
+  def addFAlgebra(): FAlgebra[IntListF, Int] = {
+    case IntNilF() => 0
+    case IntConsF(h: Int, t: Int) => h + t
+  }
+
+  def addOneToEachAlgebra(): FAlgebra[IntListF, IntListF[_]] = {
+    case IntNilF() => IntNilF()
+    case IntConsF(h: Int, t: IntListF[_]) => IntConsF(h + 1 , t)
   }
 
 }
