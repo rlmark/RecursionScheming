@@ -11,9 +11,15 @@ object FAlgebra {
   }
 
   // Is this also an f algebra?
-  type CoerceIntList[A] = IntList // Creative, but maybe this shouldn't work...
-  def out: FAlgebra[CoerceIntList, IntListF[_]] = {
+  type PhantomIntList[A] = IntList // Creative, but maybe this shouldn't work...
+  def out: FAlgebra[PhantomIntList, IntListF[_]] = {
     case INil => IntNilF()
     case ICons(h, t) => IntConsF(h, t)
   }
+
+  def multiplyFAlgebra(): FAlgebra[IntListF, Int] = {
+    case IntNilF() => 1
+    case IntConsF(h: Int, t: Int) => h * t // Weird that H and T are both Ints, how does that work w/out recursion...
+  }
+
 }

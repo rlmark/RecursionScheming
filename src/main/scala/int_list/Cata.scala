@@ -6,18 +6,24 @@ object Cata {
  * IntList => IntListF[IntList] => IntListF[A] => A
  * */
 
-  def cata1[A](r: IntList, out: IntList => IntListF[IntList],
-              map: IntListF[IntList] => IntListF[A], alg: IntListF[A] => A):A = {
-    val fr = out(r)
-    val fa = map(fr)
-    val a = alg(fa)
-    // alg(map(out(r)))
-    a
-  }
-
-  def cata2[A, R, F[_]](out: R => F[R], alg: F[A] => A)(r: R)(implicit functor: Functor[F]): A = {
+  def cata[A, R, F[_]](out: R => F[R], alg: F[A] => A)(r: R)(implicit functor: Functor[F]): A = {
     val fr: F[R] = out(r)
-    val mapCata: F[R] => F[A] = functor.map(cata2(out, alg))
+    val mapCata: F[R] => F[A] = functor.map(cata(out, alg))
     alg(mapCata(fr))
   }
+}
+
+object RunCata extends App {
+  import FAlgebra._
+  import Cata._
+  import Fix._
+  import FunctorInstances._
+
+  val testListF: IntListF[IntConsF[IntNilF[Nothing]]] = IntConsF(1, IntConsF(2, IntNilF()))
+  val testListFix: Fix[IntListF] = Fix[IntListF](IntConsF(1, Fix(IntConsF(2, Fix(IntNilF())))))
+
+  def multiply: Fix[IntList] => Int = cata(Fix(IntListF.out), multiplyFAlgebra())
+  //multiply(testListF)
+  multiply(Fix.out(testListFix))
+
 }

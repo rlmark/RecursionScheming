@@ -6,8 +6,6 @@ sealed trait IntListF[A]
 case class IntNilF[A]() extends IntListF[A]
 case class IntConsF[A](h: Int, intTailF: A) extends IntListF[A]
 
-case class Fix[F[_]](f: F[Fix[F]])
-
 object IntListF {
 
   // IntList and IntListF are ISOMORPHISMS
