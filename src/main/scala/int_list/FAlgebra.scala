@@ -12,7 +12,7 @@ object FAlgebra {
 
   // Is this also an f algebra?
   type PhantomIntList[A] = IntList // Creative, but maybe this shouldn't work...
-  def out: FAlgebra[PhantomIntList, IntListF[_]] = {
+  def out: FAlgebra[PhantomIntList, IntListF[_]] = { // ASK GREG about what the generated type would actually be
     case INil => IntNilF()
     case ICons(h, t) => IntConsF(h, t)
   }

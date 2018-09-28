@@ -11,19 +11,34 @@ object Cata {
     val mapCata: F[R] => F[A] = functor.map(cata(out, alg))
     alg(mapCata(fr))
   }
+
+  /*def cata[F[_]: Functor, A](structure: Fix[F])(algebra: F[A] => A): A =
+  algebra(structure.unfix.map(cata(_)(algebra)))*/
+  def cata2[A, R, F[_]](out: Fix[F] => F, alg: F[A] => A)(r: Fix[F])(implicit functor: Functor[F]): A = {
+    val f: F = out(r)
+    val unfixedR: F[Fix[F]] = r.unfix
+    // maybe I'm missing the power of the fixed point. Maybe I only have F instead of an R and an F
+
+    val mapCata: F[Fix[F]] => F[A] = functor.map(cata2(out, alg))
+    alg(mapCata(r.unfix))
+  }
 }
 
 object RunCata extends App {
   import FAlgebra._
   import Cata._
-  import Fix._
   import FunctorInstances._
 
   val testListF: IntListF[IntConsF[IntNilF[Nothing]]] = IntConsF(1, IntConsF(2, IntNilF()))
   val testListFix: Fix[IntListF] = Fix[IntListF](IntConsF(1, Fix(IntConsF(2, Fix(IntNilF())))))
 
-  def multiply: Fix[IntList] => Int = cata(Fix(IntListF.out), multiplyFAlgebra())
+  def multiply = cata(IntListF.out, multiplyFAlgebra())
+
+  val intListOut: IntList => IntListF[IntList] = IntListF.out
+  val intListin: IntListF[IntList] => IntList = IntListF.in
+
+  def multiply = cata2( Fix.out _ , multiplyFAlgebra())
   //multiply(testListF)
-  multiply(Fix.out(testListFix))
+  multiply(testListFix)
 
 }
