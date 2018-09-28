@@ -14,11 +14,8 @@ object Cata {
 
   /*def cata[F[_]: Functor, A](structure: Fix[F])(algebra: F[A] => A): A =
   algebra(structure.unfix.map(cata(_)(algebra)))*/
-  def cata2[A, R, F[_]](out: Fix[F] => F, alg: F[A] => A)(r: Fix[F])(implicit functor: Functor[F]): A = {
-    val f: F = out(r)
-    val unfixedR: F[Fix[F]] = r.unfix
-    // maybe I'm missing the power of the fixed point. Maybe I only have F instead of an R and an F
 
+  def cata2[A, F[_]](out: Fix[F] => F[Fix[F]], alg: F[A] => A)(r: Fix[F])(implicit functor: Functor[F]): A = {
     val mapCata: F[Fix[F]] => F[A] = functor.map(cata2(out, alg))
     alg(mapCata(r.unfix))
   }
@@ -30,15 +27,21 @@ object RunCata extends App {
   import FunctorInstances._
 
   val testListF: IntListF[IntConsF[IntNilF[Nothing]]] = IntConsF(1, IntConsF(2, IntNilF()))
-  val testListFix: Fix[IntListF] = Fix[IntListF](IntConsF(1, Fix(IntConsF(2, Fix(IntNilF())))))
+  val testListFFix: Fix[IntListF] = Fix[IntListF](IntConsF(1, Fix(IntConsF(2, Fix(IntNilF())))))
 
-  def multiply = cata(IntListF.out, multiplyFAlgebra())
+  def fromList(l: List[Int]): Fix[IntListF] = l match {
+    case Nil => Fix(IntNilF())
+    case x :: xs => Fix[IntListF](IntConsF(x, fromList(xs)))
+  }
+
+//  def multiply = cata(IntListF.out, multiplyFAlgebra())
 
   val intListOut: IntList => IntListF[IntList] = IntListF.out
   val intListin: IntListF[IntList] => IntList = IntListF.in
 
-  def multiply = cata2( Fix.out _ , multiplyFAlgebra())
+  def multiply: Fix[IntListF] => Int = cata2(Fix.out, multiplyFAlgebra())
   //multiply(testListF)
-  multiply(testListFix)
+  println(multiply(testListFFix))
+  println(multiply(fromList(1 :: 2 :: 3 :: 4 :: 5 :: Nil)))
 
 }
