@@ -12,9 +12,8 @@ object Cata {
     alg(mapCata(fr))
   }
 
-  // if you thinka bout it, your F algebra is kind of like your
-  def cata2[A, F[_]](out: Fix[F] => F[Fix[F]], alg: F[A] => A)(r: Fix[F])(implicit functor: Functor[F]): A = {
-    val mapCata: F[Fix[F]] => F[A] = functor.map(cata2(out, alg))
+  def cataFix[A, F[_]](out: Fix[F] => F[Fix[F]], alg: F[A] => A)(r: Fix[F])(implicit functor: Functor[F]): A = {
+    val mapCata: F[Fix[F]] => F[A] = functor.map(cataFix(out, alg))
     alg(mapCata(r.unfix))
   }
 }
@@ -34,8 +33,8 @@ object RunCata extends App {
 
   def multiply1 = cata(IntListF.out, multiplyFAlgebra())_
 
-  def multiply2: Fix[IntListF] => Int = cata2(Fix.out, multiplyFAlgebra())
-  def addOneToEach = cata2(Fix.out, addOneToEachAlgebra())
+  def multiply2: Fix[IntListF] => Int = cataFix(Fix.out, multiplyFAlgebra())
+  def addOneToEach: Fix[IntListF] => IntListF[_] = cataFix(Fix.out, addOneToEachAlgebra())
   //multiply(testListF)
   println(multiply2(testListFFix))
   println(multiply2(fromList(1 :: 2 :: 3 :: 4 :: 5 :: Nil)))
