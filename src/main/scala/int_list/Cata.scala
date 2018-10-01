@@ -32,14 +32,15 @@ object RunCata extends App {
   }
 
   def multiply1 = cata(IntListF.out, multiplyFAlgebra())_
-
   def multiply2: Fix[IntListF] => Int = cataFix(Fix.out, multiplyFAlgebra())
-  def addOneToEach: Fix[IntListF] => IntListF[_] = cataFix(Fix.out, addOneToEachAlgebra())
-  //multiply(testListF)
+  //multiply1(testListF) // this doesn't work
+
   println(multiply2(testListFFix))
   println(multiply2(fromList(1 :: 2 :: 3 :: 4 :: 5 :: Nil)))
 
   // Is a Catamorphism as expressive as a fold??? Can I use it to make a new list as a kind of weird map?
-  println((1 to 10).toList.foldLeft(List[Int]())((acc, next) => next + 1 :: acc ))
+  println((1 to 10).toList.foldLeft(List[Int]())((acc, next) => acc :+ next + 1 ))
+  // Answer: Yes! You can!
+  def addOneToEach: Fix[IntListF] => IntListF[_] = cataFix(Fix.out, addOneToEachAlgebra())
   println(addOneToEach(testListFFix))
 }
