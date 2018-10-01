@@ -12,8 +12,9 @@ object Cata {
     alg(mapCata(fr))
   }
 
-  def cataFix[A, F[_]](out: Fix[F] => F[Fix[F]], alg: F[A] => A)(r: Fix[F])(implicit functor: Functor[F]): A = {
-    val mapCata: F[Fix[F]] => F[A] = functor.map(cataFix(out, alg))
+  def cataFix[A, F[_]: Functor[F]](out: Fix[F] => F[Fix[F]], alg: F[A] => A)(r: Fix[F]): A = {
+    val functorOfF = Functor[F]
+    val mapCata: F[Fix[F]] => F[A] = functorOfF.map(cataFix(out, alg))
     alg(mapCata(r.unfix))
   }
 }

@@ -21,6 +21,7 @@ object Functor {
   def mapF[A,B,F[_]](f: A => B)(implicit functorInstance: Functor[F]) = {
     functorInstance.map(f)
   }
+  def apply[F[_]](implicit f: Functor[F]): Functor[F] = f
 }
 
 object FunctorInstanceRun extends App {
